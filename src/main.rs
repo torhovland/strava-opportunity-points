@@ -4,12 +4,11 @@ fn main() {
     use strava::athletes::Athlete;
     use strava::api::AccessToken;
     
-    // Create a token
-    let token = AccessToken::new("<my token>".to_string());
+    let token_string = "<my token>";
+    let token = AccessToken::new(token_string.to_string());    
+    let athlete = Athlete::get_current(&token).unwrap_or_else(|error| {
+        panic!("Problem with Strava API token {:?}. The error was: {:?}", token_string, error);
+    });
     
-    // Get the athlete associated with the given token
-    let athlete = Athlete::get_current(&token).unwrap();
-    
-    // All of the strava types implement Debug and can be printed like so:
     println!("{:?}", athlete);
 }
