@@ -6,3 +6,5 @@ authors = ["VS Code <vscode@microsoft.com>"]
 [lib]
 path ="./src/lib/lib.rs"
 
+[dependencies]
+strava = { git = "https://github.com/torhovland/strava-rs" }    # Strava API v3 Client

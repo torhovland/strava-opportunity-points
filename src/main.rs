@@ -1,9 +1,15 @@
-/*--------------------------------------------------------------------------------------------------------------
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
- *-------------------------------------------------------------------------------------------------------------*/
+extern crate strava;
 
 fn main() {
-    let name = "VS Code Remote - Containers";
-    println!("Hello, {}!", name);
+    use strava::athletes::Athlete;
+    use strava::api::AccessToken;
+    
+    // Create a token
+    let token = AccessToken::new("<my token>".to_string());
+    
+    // Get the athlete associated with the given token
+    let athlete = Athlete::get_current(&token).unwrap();
+    
+    // All of the strava types implement Debug and can be printed like so:
+    println!("{:?}", athlete);
 }
