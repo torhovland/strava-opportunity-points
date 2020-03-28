@@ -1,14 +1,37 @@
-extern crate strava;
+use strava::api::{AccessToken, RefreshToken};
+use strava::athletes::Athlete;
 
-fn main() {
-    use strava::athletes::Athlete;
-    use strava::api::AccessToken;
-    
-    let token_string = "<my token>";
-    let token = AccessToken::new(token_string.to_string());    
-    let athlete = Athlete::get_current(&token).unwrap_or_else(|error| {
-        panic!("Problem with Strava API token {:?}. The error was: {:?}", token_string, error);
+#[tokio::main]
+async fn main() {
+    let refresh_token_string = "55119...25";
+    let client_id_string = "3...7";
+    let client_secret_string = "1fb09...b3";
+
+    let refresh_token = RefreshToken::new(
+        refresh_token_string.to_string(),
+        client_id_string.to_string(),
+        client_secret_string.to_string(),
+    );
+
+    let token = AccessToken::get_current(&refresh_token)
+        .await
+        .unwrap_or_else(|error| {
+            panic!(
+            "Problem getting Strava API access token using refresh token {:?}. The error was: {:?}",
+            refresh_token_string, error
+        );
+        });
+
+    println!("Got access token {:?}", token.access_token);
+    println!("Got refresh token {:?}", token.refresh_token);
+
+    let athlete = Athlete::get_current(&token).await.unwrap_or_else(|error| {
+        panic!(
+            "Problem with Strava API token {:?}. The error was: {:?}",
+            token.get(),
+            error
+        );
     });
-    
+
     println!("{:?}", athlete);
 }
